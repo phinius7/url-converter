@@ -6,26 +6,27 @@
 <nav th:replace="fragments/header :: header"></nav>
 <div class="d-flex">
     <div class="content p-4">
-
-        <div class="form-group" style="float:left; width:50%; display:inline-block; padding-left: 20px;">
-            <h4 class="mb-4">Convert to Short URL</h4>
-            <input th:field="*{long_url}" type="text" class="form-control" id="long_url"
-                   placeholder="Enter original URL" required>
-            <div class="card-body" th:text="*{long_url_text}"></div>
-            <div class="card-body">
-                <a class="btn btn-primary btn-lg btn-block btn-pill" th:href="@{/}">Generate</a>
+        <form th:action="@{/generate}" th:object="${link}" method="POST">
+            <div class="form-group" style="float:left; width:50%; display:inline-block; padding-left: 20px;">
+                <h4 class="mb-4">Convert to Short URL</h4>
+                <input th:field="*{originalLink}" type="text" class="form-control" id="long_url"
+                       placeholder="Enter original URL">
+                <div class="card-body" th:text="*{originalLink}"></div>
+                <div class="card-body">
+                    <button class="btn btn-success btn-pill" type="submit">Convert</button>
+                </div>
             </div>
-        </div>
 
-        <div class="form-group" style="float:left; width:50%; display:inline-block; padding-left: 20px;">
-            <h4 class="mb-4">Recover Original URL</h4>
-            <input th:field="*{short_url}" type="text" class="form-control" id="short_url"
-                   placeholder="Enter shorten URL" required>
-            <div class="card-body" th:text="*{short_url_text}"></div>
-            <div class="card-body">
-                <a class="btn btn-primary btn-lg btn-block btn-pill" th:href="@{/}">Return</a>
+            <div class="form-group" style="float:left; width:50%; display:inline-block; padding-left: 20px;">
+                <h4 class="mb-4">Recover Original URL</h4>
+                <input th:field="*{shortLink}" type="text" class="form-control" id="short_url"
+                       placeholder="Enter shorten URL">
+                <div class="card-body" th:text="*{shortLink}"></div>
+                <div class="card-body">
+                    <button class="btn btn-success btn-pill" type="submit">Recover</button>
+                </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
 <script th:replace="fragments/footer :: scripts"></script>
