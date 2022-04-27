@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="fragments/header :: head"><title>Starr Page</title></head>
+<head th:replace="fragments/header :: head"><title>Start Page</title></head>
 <body class="bg-light">
 <nav th:replace="fragments/header :: header"></nav>
 <div class="d-flex">
@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="form-group">
-                    <h6 class="mb-4">Set Length of URL</h6>
+                    <h6 class="mb-4">Set Length of New URL</h6>
                     <select size="1" th:field="*{length}" required>
                         <option th:value="2">2</option>
                         <option th:value="4">4</option>
@@ -36,7 +36,7 @@
                     <h4 class="mb-4">Recover Original URL</h4>
                     <input th:field="*{shortLink}" type="text" class="form-control" id="short_url"
                            placeholder="Enter shorten URL">
-                    <div class="alert alert-danger" th:if="${notFound}" th:text="'This URL not generated yet.'"></div>
+                    <div class="alert alert-danger" th:if="${notFound}" th:text="'This URL not generated yet or expired.'"></div>
                     <div class="card-body" th:text="*{originalLink}"></div>
                     <div class="card-body">
                         <button class="btn btn-success btn-pill" type="submit">Recover</button>

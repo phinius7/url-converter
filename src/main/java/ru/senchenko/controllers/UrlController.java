@@ -1,20 +1,18 @@
 package ru.senchenko.controllers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import ru.senchenko.dao.LinkDao;
+import ru.senchenko.dao.UrlDao;
 import ru.senchenko.services.UrlService;
 
+import javax.validation.Valid;
+
 @Controller
-@RequestMapping("/")
 public class UrlController {
-    private static final Logger logger = LoggerFactory.getLogger(UrlController.class);
 
     private final UrlService urlService;
 
@@ -23,19 +21,38 @@ public class UrlController {
         this.urlService = urlService;
     }
 
-    @GetMapping
+    @GetMapping("/")
     public String indexPage(Model model) {
-        model.addAttribute("activePage", "index");
-        model.addAttribute("link", new LinkDao());
+        model.addAttribute("linkForShort", new UrlDao());
+        model.addAttribute("linkForOriginal", new UrlDao());
         return "index";
     }
 
-    @PostMapping("/generate")
-    public String getResult(Model model, LinkDao linkDao) {
-        model.addAttribute("activePage", "generate");
-        String longUrl = linkDao.getOriginalLink();
-        String shortUrl = linkDao.getShortLink();
-        model.addAttribute("link", linkDao);
+    @PostMapping("/short")
+    public String getShortUrl(Model model, @Valid UrlDao urlDao, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            model.addAttribute("linkForShort", new UrlDao());
+            model.addAttribute("linkForOriginal", new UrlDao());
+            model.addAttribute("error", true);
+            return "index";
+        }
+        UrlDao processedLink = urlService.generateShortUrl(urlDao);
+        model.addAttribute("linkForShort", processedLink);
+        model.addAttribute("linkForOriginal", new UrlDao());
+        return "index";
+    }
+
+    @PostMapping("/original")
+    public String getOriginalUrl(Model model, UrlDao urlDao) {
+        UrlDao processedLink = urlService.getOriginalUrl(urlDao);
+        model.addAttribute("linkForShort", new UrlDao());
+        if (processedLink.getLength() == -1) {
+            model.addAttribute("linkForOriginal", new UrlDao());
+            model.addAttribute("notFound", true);
+        } else {
+            model.addAttribute("linkForOriginal", processedLink);
+        }
+
         return "index";
     }
 }
