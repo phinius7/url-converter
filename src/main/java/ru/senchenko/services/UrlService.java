@@ -43,6 +43,9 @@ public class UrlService {
     }
 
     public UrlDao getOriginalUrl(UrlDao shortUrl) {
+        if(shortUrl.getLength() != null) {
+            deleteExpiredUrls(shortUrl.getLength());
+        }
         Optional<UrlDao> tmpLink = getByShortLinkAndLength(shortUrl.getShortLink());
         if (tmpLink.isPresent()) {
             return tmpLink.get();
