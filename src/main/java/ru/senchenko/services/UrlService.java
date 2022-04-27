@@ -15,6 +15,7 @@ import java.util.Optional;
 public class UrlService {
 
     private static final Long DELAY = 100 * 1000L;
+    private static final int RETRY_TIMES = 1000;
     private final UrlRepo urlRepo;
 
     @Autowired
@@ -64,8 +65,14 @@ public class UrlService {
         } else {
             String shortUrl;
             LinkGenerator linkGenerator = new LinkGenerator();
+            int internalCounter = 0;
             do {
+                internalCounter++;
                 shortUrl = linkGenerator.generateLink(url.getLength());
+                if (internalCounter >= RETRY_TIMES) {
+                    deleteExpiredUrls(url.getLength());
+                    internalCounter = 0;
+                }
             } while (getByShortLinkAndLength(shortUrl).isPresent());
             url.setShortLink(shortUrl);
             create(url);
