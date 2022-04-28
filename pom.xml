@@ -11,6 +11,7 @@
     <groupId>ru.senchenko</groupId>
     <artifactId>url-converter</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <packaging>war</packaging>
     <name>url-converter</name>
     <description>url-converter</description>
     <properties>
